@@ -1,7 +1,13 @@
+if (process.env.NODE_ENV != "production") require("dotenv").config();
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3500;
 const path = require("path");
+const DATABASE_URI = process.env.DATABASE_URI;
+const connectDB = require("./config/connectDB");
+
+console.log(DATABASE_URI);
+connectDB(DATABASE_URI);
 
 app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(path.join(__dirname, "frontend")));
