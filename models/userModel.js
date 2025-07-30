@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const userSchema = mongoose.Schema({
-  firstName: {
-    required: [true, "FirstName is required"],
-    type: String,
-    trim: true,
-    lowercase: true,
-  },
-  lastName: {
-    required: [true, "LastName is required"],
+  name: {
     type: String,
     trim: true,
     lowercase: true,
@@ -26,6 +19,15 @@ const userSchema = mongoose.Schema({
     trim: true,
     type: String,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+    select: false,
+  },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+  }],
   phoneNo: {
     select: false,
     trim: true,
@@ -34,14 +36,6 @@ const userSchema = mongoose.Schema({
   active: {
     type: Boolean,
     default: true,
-  },
-  createdDate: {
-    type: Date,
-    default: new Date(),
-  },
-  deletedDate: {
-    type: Date,
-    select: false,
   },
   verified: {
     type: Boolean,

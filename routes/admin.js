@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const { isAdmin } = require("../middlewares/identifier");
 
-router.get("/", (req, res) => {
+router.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "admin", "index.html"));
 });
 
-router.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "frontend", "admin", "login.html"));
-});
+router.use(isAdmin);
 
 router.get("/signup", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "register.html"));
@@ -16,6 +15,10 @@ router.get("/signup", (req, res) => {
 
 router.get("/logout", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "admin", "logout.html"));
+});
+
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "frontend", "admin", "dashboard.html"));
 });
 
 router.get("/orders", (req, res) => {

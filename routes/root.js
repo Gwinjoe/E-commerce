@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const { isLoggedIn } = require("../middlewares/identifier")
 
 // root routes
 
@@ -24,6 +25,16 @@ router.get("/contact", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "contact.html"));
 });
 
+router.get("/authorise", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "frontend", "authentication.html"));
+});
+
+router.get("/faq", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "frontend", "faq.html"));
+})
+
+
+router.use(isLoggedIn);
 router.get("/product", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "product.html"));
 });
@@ -35,21 +46,10 @@ router.get("/shop", (req, res) => {
 router.get("/chat", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "chat.html"));
 });
-
-router.get("/authorise", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "frontend", "authentication.html"));
-});
-
 router.get("/cart", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "cart.html"));
 });
-
-router.get("/faq", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "frontend", "faq.html"));
-})
-
 //user routes
-
 router.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "users", "dashboard.html"))
 });

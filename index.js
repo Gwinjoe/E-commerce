@@ -5,16 +5,44 @@ const PORT = process.env.PORT || 3500;
 const path = require("path");
 const DATABASE_URI = process.env.DATABASE_URI;
 const connectDB = require("./config/connectDB");
+const passport = require("passport");
+const session = require("express-session");
+const adminRoutes = require("./routes/admin");
+const rootRoutes = require("./routes/root")
 
+const MongoStore = require("connect-mongo");
+
+const sessionStore = MongoStore.create({ mongoUrl: DATABASE_URI, collectionName: "sessions" });
 console.log(DATABASE_URI);
 connectDB(DATABASE_URI);
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname, "frontend")));
 app.use("/admin", express.static(path.join(__dirname, "frontend")));
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+  }
+}))
 
-app.use("/", require("./routes/root"));
-app.use("/admin", require("./routes/admin"));
+require("./config/passport");
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+  console.log(req.session);
+  console.log(req.user);
+  next();
+})
+
+
+app.use("/admin", adminRoutes);
+app.use("/", rootRoutes);
+app.use("/api", require("./routes/api/routes"))
 
 app.all("/{*splat}", (req, res) => {
   if (req.accepts("html")) {
